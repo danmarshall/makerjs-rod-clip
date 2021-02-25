@@ -1,6 +1,6 @@
 {
   "name": "makerjs-rod-clip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Clip-on shape for a rod, pipe or tube",
   "main": "index.js",
   "scripts": {
