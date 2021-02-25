@@ -75,4 +75,4 @@ class RodClip implements makerjs.IModel {
     { title: "mirror", type: "bool", value: true },
 ];
 
-module.exports = RodClip;
+export = RodClip;
