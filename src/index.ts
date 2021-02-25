@@ -2,34 +2,34 @@ import * as makerjs from 'makerjs';
 
 class HalfRodClip {
     public paths: makerjs.IPathMap;
-    constructor(radius: number, angle: number, thickness: number, tipPct: number, fillet: number, bottom: number, mirror: boolean) {
+    constructor(radius: number, angle: number, thickness: number, tip: number, fillet: number, bottom: number, mirror: boolean) {
 
         //0 = thickness / 2
         //1 = thickness
-        var tipRadius = (thickness / 2) * (1 + tipPct);
+        var tipRadius = (thickness / 2) * (1 + tip);
 
         var tipCenter = makerjs.point.rotate([radius + tipRadius, 0], angle);
-        var tipArc = new makerjs.paths.Arc(tipCenter, tipRadius, tipPct ? angle - 180 : angle, angle + 180);
+        var tipArc = new makerjs.paths.Arc(tipCenter, tipRadius, tip ? angle - 180 : angle, angle + 180);
 
         var outerRadius = radius + thickness;
-        var bandOuter = new makerjs.paths.Arc([0, 0], outerRadius, 270, angle);
+        var outerArc = new makerjs.paths.Arc([0, 0], outerRadius, 270, angle);
 
-        if (tipPct) {
-            var int = makerjs.path.intersection(bandOuter, tipArc)
+        if (tip) {
+            var int = makerjs.path.intersection(outerArc, tipArc)
             if (int) {
-                bandOuter.endAngle = int.path1Angles[0]
-                tipArc.startAngle = int.path2Angles[0]
+                outerArc.endAngle = int.path1Angles[0];
+                tipArc.startAngle = int.path2Angles[0];
             }
         }
 
         var base = new makerjs.paths.Line([0, -outerRadius], [outerRadius, -outerRadius]);
-        var baseFillet = makerjs.path.fillet(base, bandOuter, fillet);
+        var baseFillet = makerjs.path.fillet(base, outerArc, fillet);
 
         var bottomY = -(outerRadius + bottom);
 
         this.paths = {
-            bandInner: new makerjs.paths.Arc([0, 0], radius, 270, angle),
-            bandOuter,
+            innerArc: new makerjs.paths.Arc([0, 0], radius, 270, angle),
+            bandOuter: outerArc,
             ttip: tipArc,
             base,
             baseFillet,
@@ -37,14 +37,14 @@ class HalfRodClip {
             bottomRight: new makerjs.paths.Line([outerRadius, -outerRadius], [outerRadius, bottomY]),
         };
 
-        var tipFillet = makerjs.path.fillet(bandOuter, tipArc, thickness)
-        if (tipFillet && tipFillet.radius) {
-            this.paths.tipFillet = tipFillet
+        var tipFillet = makerjs.path.fillet(outerArc, tipArc, thickness);
+        if (tipFillet) {
+            this.paths.tipFillet = tipFillet;
         }
 
         var tipHoleRadius = tipRadius - thickness;
         if (tipHoleRadius > 0) {
-            this.paths.tipHole = new makerjs.paths.Circle(tipCenter, tipHoleRadius)
+            this.paths.tipHole = new makerjs.paths.Circle(tipCenter, tipHoleRadius);
         }
 
         if (!mirror) {
@@ -55,9 +55,9 @@ class HalfRodClip {
 
 class RodClip implements makerjs.IModel {
     public models: makerjs.IModelMap;
-    constructor(radius: number, angle: number, thickness: number, tipPct: number, fillet: number, bottom: number, mirror: boolean) {
+    constructor(radius: number, angle: number, thickness: number, tip: number, fillet: number, bottom: number, mirror: boolean) {
         this.models = {
-            right: new HalfRodClip(radius, angle, thickness, tipPct, fillet, bottom, mirror)
+            right: new HalfRodClip(radius, angle, thickness, tip, fillet, bottom, mirror)
         };
         if (mirror) {
             this.models.left = makerjs.model.mirror(this.models.right, true, false);
