@@ -1,0 +1,29 @@
+{
+  "name": "makerjs-rod-clip",
+  "version": "1.0.0",
+  "description": "Clip-on shape for a rod, pipe or tube",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "node ./test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danmarshall/makerjs-rod-clip.git"
+  },
+  "keywords": [
+    "makerjs"
+  ],
+  "author": "Dan Marshall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danmarshall/makerjs-rod-clip/issues"
+  },
+  "homepage": "https://github.com/danmarshall/makerjs-rod-clip#readme",
+  "dependencies": {
+    "makerjs": "^0.17.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.2"
+  }
+}
